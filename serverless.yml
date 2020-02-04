@@ -20,16 +20,16 @@ provider:
 
 custom:
   accountNumber : ${ssm:/iow/aws/accountNumber}
-#  vpc:
-#    securityGroupIds:
-#      - ${ssm:/iow/aqts-capture-ts-description/vpc/securityGroupId}
-#    subnetIds:
-#      - ${ssm:/iow/aqts-capture-ts-description/vpc/subnetId}
-#  db:
-#    host: ${ssm:/iow/aqts-capture-ts-description/${self:provider.stage}/database/host}
-#    user: capture_owner
-#    password: ${ssm:/aws/reference/secretsmanager/NWISWEB-RETRIEVER-CAPTURE-POSTGRES-${self:provider.stage}~true}
-#    name: "retriever_capture"
+  vpc:
+    securityGroupIds:
+      - ${ssm:/iow/retriever-capture/vpc/securityGroupId}
+    subnetIds:
+      - ${ssm:/iow/retriever-capture/vpc/subnetId}
+  db:
+    host: ${ssm:/iow/retriever-capture/${self:provider.stage}/database/host}
+    user: capture_owner
+    password: ${ssm:/aws/reference/secretsmanager/NWISWEB-RETRIEVER-CAPTURE-POSTGRES-${self:provider.stage}~true}
+    name: "retriever_capture"
   environments:
     TEST: test
     QA: qa
@@ -41,22 +41,13 @@ functions:
     onError: arn:aws:sns:us-west-2:${self:custom.accountNumber}:aqts-capture-ts-description-${self:provider.stage}
     role: arn:aws:iam::${self:custom.accountNumber}:role/csr-Lambda-Role
 
-    events:
-#      What triggers this lambda? It won't be S3 like in the sample below.
-#      - lambda?:
-#      - stateMachine?:
-
     environment:
-#      DB_HOST: ${self:custom.db.host}
-#      DB_USER: ${self:custom.db.user}
-#      DB_NAME: ${self:custom.db.name}
-#      DB_PASSWORD: ${self:custom.db.password}
-#      AWS_DEPLOYMENT_REGION: ${self:provider.region}
+      DB_HOST: ${self:custom.db.host}
+      DB_USER: ${self:custom.db.user}
+      DB_NAME: ${self:custom.db.name}
+      DB_PASSWORD: ${self:custom.db.password}
+      AWS_DEPLOYMENT_REGION: ${self:provider.region}
     vpc: ${self:custom.vpc}
-
-# resource information from either the state machine or the triggering lambda... or both?
-#resources:
-#  Resources:
 
 package:
   artifact: /build/target/aqts-capture-ts-description-0.1.0-SNAPSHOT-aws.jar
