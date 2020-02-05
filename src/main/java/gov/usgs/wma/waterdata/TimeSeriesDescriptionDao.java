@@ -10,8 +10,11 @@ public class TimeSeriesDescriptionDao {
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
-	public int getRecordCount() {
+	public int getTsdRecordCount() {
 		return jdbcTemplate.queryForObject("select count(*) from time_series_description", Integer.class);
+	}
+	public int getJsonDataRecordCount() {
+		return jdbcTemplate.queryForObject("select count(*) from json_data", Integer.class);
 	}
 
 }

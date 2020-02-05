@@ -22,10 +22,13 @@ public class Application {
 		return value -> {
 			System.out.println("Here's the input: ");
 			System.out.println(value.toString());
-			int count = tsdDao.getRecordCount();
-			System.out.println("Here's the count:");
-			System.out.println(count);
-			return "Hello " + value.toString() + count;
+			int tsdCount = tsdDao.getTsdRecordCount();
+			int jsonDataCount = tsdDao.getJsonDataRecordCount();
+			System.out.println("Here's the count from the time_series_description_table:");
+			System.out.println(tsdCount);
+			System.out.println("Here's the count from the json_data table:");
+			System.out.println(jsonDataCount);
+			return "Hello " + value.toString() + " " + tsdCount + " " + jsonDataCount;
 		};
 	}
 }
