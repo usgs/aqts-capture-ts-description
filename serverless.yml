@@ -29,12 +29,12 @@ custom:
     connectInfo: ${ssm:/aws/reference/secretsmanager/NWCAPTURE-DB-${self:provider.stage}~true}
 
 functions:
-  yourMethodNameGoesHere:
-    handler: gov.usgs.wma.waterdata.yourHandlerClassGoesHere
+  echoObject:
+    handler: gov.usgs.wma.waterdata.EchoObjectHandler
     onError: arn:aws:sns:us-west-2:${self:custom.accountNumber}:aqts-capture-ts-description-${self:provider.stage}
     role: arn:aws:iam::${self:custom.accountNumber}:role/csr-Lambda-Role
-
     environment:
+      FUNCTION_NAME: echoObject
       DB_HOST: ${self:custom.db.connectInfo.DATABASE_ADDRESS}
       DB_USER: ${self:custom.db.connectInfo.SCHEMA_OWNER_USERNAME}
       DB_NAME: ${self:custom.db.connectInfo.DATABASE_NAME}
