@@ -15,6 +15,7 @@ pipeline {
             script {
               currentBuild.description = "Deploy to ${env.DEPLOY_STAGE}"
             }
+          }
         }
         stage('build the zip file for lambda consumption') {
             agent {
