@@ -20,12 +20,12 @@ public class Application {
 	@Bean
 	public Function<Object, String> echoObject() {
 		return value -> {
-//			System.out.println("Here's the input: ");
-//			System.out.println(value.toString());
+			System.out.println("Here's the input: ");
+			System.out.println(value.toString());
 			int count = tsdDao.getRecordCount();
 			System.out.println("Here's the count:");
 			System.out.println(count);
-			return "Hello " + value + count;
+			return "Hello " + value.toString() + count;
 		};
 	}
 }
