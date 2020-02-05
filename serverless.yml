@@ -4,7 +4,7 @@ service: aqts-capture-ts-description
 
 provider:
   name: aws
-  region: 'us-west-2'
+  region: ${opt:region, 'us-west-2'}
   stage: ${opt:stage, 'TEST'}
   runtime: java11
   memorySize: 256
@@ -32,11 +32,13 @@ functions:
     role: arn:aws:iam::${self:custom.accountNumber}:role/csr-Lambda-Role
     environment:
       FUNCTION_NAME: echoObject
-      DB_HOST: ${self:custom.db.connectInfo.DATABASE_ADDRESS}
-      DB_USER: ${self:custom.db.connectInfo.SCHEMA_OWNER_USERNAME}
-      DB_NAME: ${self:custom.db.connectInfo.DATABASE_NAME}
-      DB_PASSWORD: ${self:custom.db.connectInfo.SCHEMA_OWNER_PASSWORD}
       AWS_DEPLOYMENT_REGION: ${self:provider.region}
+      AQTS_DATABASE_ADDRESS: ${self:custom.db.connectInfo.DATABASE_ADDRESS}
+      AQTS_DATABASE_PORT: ${self:custom.db.connectInfo.DATABASE_PORT}
+      AQTS_DATABASE_NAME: ${self:custom.db.connectInfo.DATABASE_NAME}
+      AQTS_SCHEMA_NAME: ${self:custom.db.connectInfo.SCHEMA_NAME}
+      AQTS_SCHEMA_OWNER_USERNAME: ${self:custom.db.connectInfo.SCHEMA_OWNER_USERNAME}
+      AQTS_SCHEMA_OWNER_PASSWORD: ${self:custom.db.connectInfo.SCHEMA_OWNER_PASSWORD}
     vpc: ${self:custom.vpc}
 
 package:
