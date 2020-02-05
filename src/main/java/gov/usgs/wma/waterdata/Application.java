@@ -24,10 +24,15 @@ public class Application {
 			System.out.println(value.toString());
 			int tsdCount = tsdDao.getTsdRecordCount();
 			int jsonDataCount = tsdDao.getJsonDataRecordCount();
-			System.out.println("Here's the count from the time_series_description_table:");
+//			This is large, no need to log right now
+//			String timeSeriesDescriptions = tsdDao.getTimeSeriesDescriptions();
+			int timeSeriesDescriptionsCount = tsdDao.getTimeSeriesDescriptionsCount();
+			System.out.println("Here's the count of all records from the time_series_description table:");
 			System.out.println(tsdCount);
-			System.out.println("Here's the count from the json_data table:");
+			System.out.println("Here's the count of all records from the json_data table:");
 			System.out.println(jsonDataCount);
+			System.out.println("Here's the count from the timeSeriesDescriptions query to the json_data table:");
+			System.out.println(timeSeriesDescriptionsCount);
 			return "Hello " + value.toString() + " " + tsdCount + " " + jsonDataCount;
 		};
 	}

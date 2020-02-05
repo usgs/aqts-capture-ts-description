@@ -38,7 +38,6 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 @Transactional(propagation=Propagation.NOT_SUPPORTED)
 @Import({DBTestConfig.class})
 @DirtiesContext
-
 public class FunctionIT {
 
 	@Autowired
