@@ -29,7 +29,6 @@ custom:
 functions:
   echoObject:
     handler: gov.usgs.wma.waterdata.EchoObjectHandler
-    onError: arn:aws:sns:us-west-2:${self:custom.accountNumber}:aqts-capture-ts-description-${self:provider.stage}
     role: arn:aws:iam::${self:custom.accountNumber}:role/csr-Lambda-Role
     environment:
       FUNCTION_NAME: echoObject
