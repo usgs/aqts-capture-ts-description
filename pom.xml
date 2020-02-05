@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>gov.usgs.wma.waterdata</groupId>
     <artifactId>aqts-capture-ts-description</artifactId>
-    <version>0.1.${revision}</version>
+    <version>0.0.${revision}</version>
 
 
     <properties>
@@ -193,7 +193,6 @@
                     <containerNamePattern>%a</containerNamePattern>
                     <images>
                         <image>
-                            <!-- TODO: this is probably the transform db rather than the capture db?-->
                             <name>usgswma/aqts_capture_db:ci</name>
                             <alias>${TESTING_DATABASE_ADDRESS}</alias>
                             <run>
