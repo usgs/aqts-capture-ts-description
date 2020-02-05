@@ -10,6 +10,12 @@ pipeline {
         choice(choices: ['TEST', 'QA', 'PROD-EXTERNAL'], description: 'Deploy Stage (i.e. tier)', name: 'DEPLOY_STAGE')
     }
     stages {
+    	stage('Set Build Description') {
+          steps {
+            script {
+              currentBuild.description = "Deploy to ${env.DEPLOY_STAGE}"
+            }
+        }
         stage('build the zip file for lambda consumption') {
             agent {
                 dockerfile true
