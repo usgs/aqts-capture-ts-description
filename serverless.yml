@@ -27,11 +27,11 @@ custom:
     connectInfo: ${ssm:/aws/reference/secretsmanager/NWCAPTURE-DB-${self:provider.stage}~true}
 
 functions:
-  echoObject:
-    handler: gov.usgs.wma.waterdata.EchoObjectHandler
+  processTimeSeriesDescription:
+    handler: gov.usgs.wma.waterdata.ProcessTimeSeriesDescriptionHandler
     role: arn:aws:iam::${self:custom.accountNumber}:role/csr-Lambda-Role
     environment:
-      FUNCTION_NAME: echoObject
+      FUNCTION_NAME: ProcessTimeSeriesDescription
       AWS_DEPLOYMENT_REGION: ${self:provider.region}
       AQTS_DATABASE_ADDRESS: ${self:custom.db.connectInfo.DATABASE_ADDRESS}
       AQTS_DATABASE_PORT: ${self:custom.db.connectInfo.DATABASE_PORT}
