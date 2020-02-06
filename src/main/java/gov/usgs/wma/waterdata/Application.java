@@ -20,20 +20,19 @@ public class Application {
 	@Bean
 	public Function<Object, String> echoObject() {
 		return value -> {
+			// The input
 			System.out.println("Here's the input: ");
 			System.out.println(value.toString());
-			int tsdCount = tsdDao.getTsdRecordCount();
-			int jsonDataCount = tsdDao.getJsonDataRecordCount();
-//			This is large, no need to log right now
-//			String timeSeriesDescriptions = tsdDao.getTimeSeriesDescriptions();
-			int timeSeriesDescriptionsCount = tsdDao.getTimeSeriesDescriptionsCount();
-			System.out.println("Here's the count of all records from the time_series_description table:");
-			System.out.println(tsdCount);
-			System.out.println("Here's the count of all records from the json_data table:");
-			System.out.println(jsonDataCount);
+
+			// Run a count of records that will be inserted
+			int timeSeriesDescriptionsCount = tsdDao.getTimeSeriesDescriptionsForSingleJsonDataIdCount();
 			System.out.println("Here's the count from the timeSeriesDescriptions query to the json_data table:");
 			System.out.println(timeSeriesDescriptionsCount);
-			return "Hello " + value.toString() + " " + tsdCount + " " + jsonDataCount;
+
+			// Run an insert into the time_series_description table
+			tsdDao.insertTimeSeriesDescriptionsForSingleJsonDataId();
+
+			return "Hello " + value.toString() + " " + timeSeriesDescriptionsCount;
 		};
 	}
 }
