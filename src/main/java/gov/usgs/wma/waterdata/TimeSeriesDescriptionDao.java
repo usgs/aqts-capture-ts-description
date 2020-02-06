@@ -10,7 +10,7 @@ public class TimeSeriesDescriptionDao {
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
-	public void insertTimeSeriesDescriptionsForSingleJsonDataId() {
+	public void insertTimeSeriesDescriptionsForSingleJsonDataId(Long jsonDataId) {
 		String sql = "insert into \n" +
 				"\tcapture.time_series_description \n" +
 				"(\n" +
@@ -58,7 +58,7 @@ public class TimeSeriesDescriptionDao {
 				"\t) as a\n" +
 				"\twhere jsonb_extract_path_text(a.time_series_descriptions, 'ComputationPeriodIdentifier') = 'Daily'\n" +
 				"\tand a.url like '%GetTimeSeriesDescriptionListByUniqueId%'\n" +
-				"\tand a.json_data_id = 91\n" +
+				"\tand a.json_data_id = ?\n" +
 				") as b \n" +
 				"on conflict (time_series_unique_id) do update \n" +
 				"\tset \n" +
@@ -74,6 +74,6 @@ public class TimeSeriesDescriptionDao {
 				"\t\tcomputation_period_identifier = excluded.computation_period_identifier\n" +
 				"where capture.time_series_description.last_modified < excluded.last_modified\n";
 
-		jdbcTemplate.execute(sql);
+		jdbcTemplate.update(sql, jsonDataId);
 	}
 }

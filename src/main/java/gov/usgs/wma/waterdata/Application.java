@@ -25,7 +25,8 @@ public class Application {
 			System.out.println(value.toString());
 
 			// Run an insert into the time_series_description table
-			tsdDao.insertTimeSeriesDescriptionsForSingleJsonDataId();
+			Long sample_json_id = Long.valueOf(50);
+			tsdDao.insertTimeSeriesDescriptionsForSingleJsonDataId(sample_json_id);
 
 			return "Hello " + value.toString();
 		};
