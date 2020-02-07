@@ -2,12 +2,12 @@ package gov.usgs.wma.waterdata;
 
 public class ResultObject {
 
-	private Long[] tsDescriptionUniqueIds;
+	private String[] tsDescriptionUniqueIds;
 
-	public Long[] getTsDescriptionUniqueIds() {
+	public String[] getTsDescriptionUniqueIds() {
 		return tsDescriptionUniqueIds;
 	}
-	public void setTsDescriptionUniqueIds(Long[] tsDescriptionIds) {
+	public void setTsDescriptionUniqueIds(String[] tsDescriptionIds) {
 		this.tsDescriptionUniqueIds = tsDescriptionIds;
 	}
 }

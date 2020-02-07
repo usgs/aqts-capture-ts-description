@@ -10,7 +10,8 @@ public class TimeSeriesDescriptionDao {
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
-	public void insertTimeSeriesDescriptionsForSingleJsonDataId(Long jsonDataId) {
+	public String[] upsertTimeSeriesDescriptionsForSingleJsonDataId(Long jsonDataId) {
+
 		String sql = "insert into \n" +
 				"\tcapture.time_series_description \n" +
 				"(\n" +
@@ -74,6 +75,7 @@ public class TimeSeriesDescriptionDao {
 				"\t\tcomputation_period_identifier = excluded.computation_period_identifier\n" +
 				"where capture.time_series_description.last_modified < excluded.last_modified\n";
 
-		jdbcTemplate.update(sql, jsonDataId);
+		Object[] theJsonDataId = {jsonDataId};
+		return jdbcTemplate.queryForObject(sql, theJsonDataId, String[].class);
 	}
 }

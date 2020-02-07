@@ -44,7 +44,7 @@ public class timeSeriesDescriptionDaoIT {
 
 	@Test
 	public void foundTest() {
-		assertEquals(0, tsdDao.getTsdRecordCount());
+		assertEquals(0, tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId());
 	}
 
 }
