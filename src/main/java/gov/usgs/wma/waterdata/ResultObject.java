@@ -1,13 +1,15 @@
 package gov.usgs.wma.waterdata;
 
+import java.util.List;
+
 public class ResultObject {
 
-	private String[] tsDescriptionUniqueIds;
+	private List<String> tsDescriptionUniqueIds;
 
-	public String[] getTsDescriptionUniqueIds() {
+	public List<String> getTsDescriptionUniqueIds() {
 		return tsDescriptionUniqueIds;
 	}
-	public void setTsDescriptionUniqueIds(String[] tsDescriptionIds) {
+	public void setTsDescriptionUniqueIds(List<String> tsDescriptionIds) {
 		this.tsDescriptionUniqueIds = tsDescriptionIds;
 	}
 }

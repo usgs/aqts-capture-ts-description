@@ -1,5 +1,6 @@
 package gov.usgs.wma.waterdata;
 
+import java.util.List;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class ProcessTimeSeriesDescription implements Function<RequestObject, Obj
 		// run the insert
 		System.out.println("Here's the input: ");
 		System.out.println(request.getId());
-		String[] tsduids = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(request.getId());
+		List<String> tsduids = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(request.getId());
 
 		result.setTsDescriptionUniqueIds(tsduids);
 		return result;

@@ -4,13 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class TimeSeriesDescriptionDao {
 
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
-	public String[] upsertTimeSeriesDescriptionsForSingleJsonDataId(Long jsonDataId) {
+	public List<String> upsertTimeSeriesDescriptionsForSingleJsonDataId(Long jsonDataId) {
 
 		String sql = "insert into \n" +
 				"\tcapture.time_series_description \n" +
@@ -78,6 +80,6 @@ public class TimeSeriesDescriptionDao {
 				"returning time_series_unique_id";
 
 		Object[] theJsonDataId = {jsonDataId};
-		return jdbcTemplate.queryForObject(sql, theJsonDataId, String[].class);
+		return jdbcTemplate.queryForList(sql, theJsonDataId, String.class);
 	}
 }
