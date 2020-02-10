@@ -42,7 +42,7 @@ public class FunctionIT {
 
 	@Autowired
 	Function<Object, String> echoObject;
-	
+
 // TODO needs an update
 //	@Test
 //	public void foundTest() {
