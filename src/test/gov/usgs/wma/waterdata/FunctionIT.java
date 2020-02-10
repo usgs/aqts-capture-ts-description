@@ -40,8 +40,8 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 @DirtiesContext
 public class FunctionIT {
 
-	@Autowired
-	Function<Object, String> echoObject;
+//	@Autowired
+//	Function<Object, String> echoObject;
 
 // TODO needs an update
 //	@Test

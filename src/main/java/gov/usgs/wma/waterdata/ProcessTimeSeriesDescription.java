@@ -1,5 +1,6 @@
 package gov.usgs.wma.waterdata;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 
@@ -22,14 +23,18 @@ public class ProcessTimeSeriesDescription implements Function<RequestObject, Obj
 	}
 
 	protected ResultObject processRequest(RequestObject request) {
-		ResultObject result = new ResultObject();
 
-		// The upsert returns a list of time series unique ids that were either updated or inserted.  Returns an empty
-		// list if no records were updated or inserted.
-		LOG.info("json_data_id: {}", request.getId());
-		List<String> uniqueIds = timeSeriesDescriptionDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(request.getId());
-		LOG.info("uniqueIds: {}", uniqueIds);
-		result.setUniqueIds(uniqueIds);
+		ResultObject result = new ResultObject();
+		LOG.info("processing json_data_id: {}", request.getId());
+
+		try {
+			List<String> uniqueIds = timeSeriesDescriptionDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(request.getId());
+			result.setUniqueIds(uniqueIds);
+			LOG.info("updated or inserted uniqueIds: {}", result.getUniqueIds());
+		} catch (IOException e) {
+			LOG.error(e.getLocalizedMessage());
+		}
+
 		return result;
 	}
 }
