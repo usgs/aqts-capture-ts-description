@@ -25,7 +25,7 @@ public class ProcessTimeSeriesDescription implements Function<RequestObject, Obj
 		System.out.println(request.getId());
 		List<String> tsduids = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(request.getId());
 
-		result.setTsDescriptionUniqueIds(tsduids);
+		result.setUniqueIds(tsduids);
 		return result;
 	}
 }
