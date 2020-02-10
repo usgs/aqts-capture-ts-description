@@ -4,12 +4,13 @@ import java.util.List;
 
 public class ResultObject {
 
-	private List<String> UniqueIds;
+	private List<String> uniqueIds;
 
 	public List<String> getUniqueIds() {
-		return UniqueIds;
+		return uniqueIds;
 	}
-	public void setUniqueIds(List<String> UniqueIds) {
-		this.UniqueIds = UniqueIds;
+
+	public void setUniqueIds(List<String> uniqueIds) {
+		this.uniqueIds = uniqueIds;
 	}
 }
