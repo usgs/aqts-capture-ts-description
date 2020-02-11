@@ -17,7 +17,7 @@ public class TimeSeriesDescriptionDao {
 	protected JdbcTemplate jdbcTemplate;
 
 	@Value("classpath:sql/upsertTimeSeriesDescriptions.sql")
-	private Resource upsertTimeSeriesDescriptions;
+	protected Resource upsertTimeSeriesDescriptions;
 
 	public List<String> upsertTimeSeriesDescriptionsForSingleJsonDataId(Long jsonDataId) throws IOException {
 

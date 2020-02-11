@@ -1,5 +1,5 @@
 insert into
-	capture.time_series_description
+	time_series_description
 (
 	unit,
 	label,
@@ -41,7 +41,7 @@ from
 		script_name,
 		json_data_id,
 		url
-		from capture.json_data
+		from json_data
 	) as a
 	where jsonb_extract_path_text(a.time_series_descriptions, 'ComputationPeriodIdentifier') = 'Daily'
 	and a.url like '%GetTimeSeriesDescriptionListByUniqueId%'
@@ -60,5 +60,5 @@ on conflict (time_series_unique_id) do update
 		corrected_end_time = excluded.corrected_end_time,
 		location_identifier = excluded.location_identifier,
 		computation_period_identifier = excluded.computation_period_identifier
-where capture.time_series_description.last_modified < excluded.last_modified
+where time_series_description.last_modified < excluded.last_modified
 returning time_series_unique_id
