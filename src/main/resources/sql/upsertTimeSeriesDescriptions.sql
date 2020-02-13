@@ -11,7 +11,9 @@ insert into
 	corrected_start_time,
 	corrected_end_time,
 	location_identifier,
-	computation_period_identifier
+	computation_period_identifier,
+    response_time,
+    response_version
 )
 select
 	jsonb_extract_path_text(time_series_descriptions, 'Unit') unit,
@@ -24,7 +26,9 @@ select
 	jsonb_extract_path_text(time_series_descriptions, 'CorrectedStartTime')::timestamp corrected_start_time,
 	jsonb_extract_path_text(time_series_descriptions, 'CorrectedEndTime')::timestamp corrected_end_time,
 	jsonb_extract_path_text(time_series_descriptions, 'LocationIdentifier') location_identifier,
-	jsonb_extract_path_text(time_series_descriptions, 'ComputationPeriodIdentifier') computation_period_identifier
+	jsonb_extract_path_text(time_series_descriptions, 'ComputationPeriodIdentifier') computation_period_identifier,
+    response_time,
+    response_version
 from
 (
 	select a.time_series_descriptions,
@@ -32,10 +36,14 @@ from
 	a.script_pid,
 	a.start_time,
 	a.script_name,
-	a.json_data_id
+	a.json_data_id,
+	a.response_time,
+	a.response_version
 	from
 	(
 		select jsonb_array_elements(jsonb_extract_path(json_content, 'TimeSeriesDescriptions')) time_series_descriptions,
+        jsonb_extract_path_text(json_content, 'ResponseTime')::timestamp response_time,
+        jsonb_extract_path_text(json_content, 'ResponseVersion')::integer response_version,
 		script_pid,
 		start_time,
 		script_name,
@@ -59,6 +67,8 @@ on conflict (time_series_unique_id) do update
 		corrected_start_time = excluded.corrected_start_time,
 		corrected_end_time = excluded.corrected_end_time,
 		location_identifier = excluded.location_identifier,
-		computation_period_identifier = excluded.computation_period_identifier
+		computation_period_identifier = excluded.computation_period_identifier,
+        response_time = excluded.response_time,
+        response_version = excluded.response_version
 where time_series_description.last_modified < excluded.last_modified
 returning time_series_unique_id

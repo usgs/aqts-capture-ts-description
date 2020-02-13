@@ -50,9 +50,11 @@ public class TimeSeriesDescriptionDaoIT {
 	@Autowired
 	private TimeSeriesDescriptionDao tsdDao;
 
+	private RequestObject jsonDataId = new RequestObject();
+
 	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
 	@Test
-	public void testHappyPath() throws IOException {
+	public void testUpsertAttemptWithBrandNewDataShouldReturn46UniqueIds() throws IOException {
 
 		RequestObject request = new RequestObject();
 		request.setId(265L);
@@ -108,31 +110,49 @@ public class TimeSeriesDescriptionDaoIT {
 		assertEquals(expectedUniqueIds, actualUniqueIds);
 	}
 
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
 	@Test
-	public void testBadJsonDataId() throws IOException {
+	public void testJsonDataIdThatDoesNotHaveTimeSeriesDescriptionsReturnsEmptyList() throws IOException {
 
-		RequestObject request = new RequestObject();
-		request.setId(500L);
+		jsonDataId.setId(500L);
 		List<String> expectedUniqueIds = Arrays.asList();
-		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(request.getId());
+		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(jsonDataId.getId());
 		assertEquals(expectedUniqueIds, actualUniqueIds);
 	}
 
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/existingData/")
 	@Test
-	public void testTwoSequentialUpsertAttemptsWithSameDataShouldYieldNoChanges() throws IOException {
+	public void testUpsertAttemptsWithSameDataShouldYieldNoChangesAndReturnsEmptyList() throws IOException {
 
-		RequestObject request = new RequestObject();
-		request.setId(265L);
+		jsonDataId.setId(265L);
 		List<String> expectedUniqueIds = Arrays.asList();
-		List<String> uniqueIdsFromFirstUpsert = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(request.getId());
-		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(request.getId());
+		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(jsonDataId.getId());
+		assertEquals(expectedUniqueIds, actualUniqueIds);
+	}
+
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/existingStaleData/")
+	@Test
+	public void testUpsertAttemptWithThreeRecordsThatAreNewerThanTheExistingDataShouldReturn3UniqueIds() throws IOException {
+
+		jsonDataId.setId(265L);
+		List<String> expectedUniqueIds = Arrays.asList(
+				"01c56d4c5d2143f4b039e78c5f43a2d3",
+				"07ac715d9db84117b2971df3d63b0837",
+				"0f083f2f9dfd4cb6af6c10ca6a20c3bb"
+		);
+		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(jsonDataId.getId());
+		assertEquals(expectedUniqueIds, actualUniqueIds);
+
+		// A subsequent upsert with the same data should yield no changes and return an empty list of unique ids
+		expectedUniqueIds = Arrays.asList();
+		actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(jsonDataId.getId());
 		assertEquals(expectedUniqueIds, actualUniqueIds);
 	}
 
 //	@Test
 //	@ExpectedDatabase(
 //			connection="schema_name",
-//			value="classpath:/testResult/happyPath/",
+//			value="classpath:/testResult/timeSeriesDescription/happyPath/",
 //			assertionMode= DatabaseAssertionMode.NON_STRICT_UNORDERED,
 //			table= "time_series_description",
 //			query= "upsert query goes here")
