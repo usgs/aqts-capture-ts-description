@@ -1,6 +1,7 @@
 package gov.usgs.wma.waterdata;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
@@ -54,10 +55,9 @@ public class TimeSeriesDescriptionDaoIT {
 
 	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
 	@Test
-	public void testUpsertAttemptWithBrandNewDataShouldReturn46UniqueIds() throws IOException {
+	public void testUpsertWithBrandNewDataShouldReturn46UniqueIds() throws IOException {
 
-		RequestObject request = new RequestObject();
-		request.setId(265L);
+		jsonDataId.setId(265L);
 		List<String> expectedUniqueIds = Arrays.asList(
 				"01c56d4c5d2143f4b039e78c5f43a2d3",
 				"07ac715d9db84117b2971df3d63b0837",
@@ -106,7 +106,7 @@ public class TimeSeriesDescriptionDaoIT {
 				"f888a78b664a4257a981aecb8debd962",
 				"feee49b5943b4994aa03c6c2905e7d1c");
 
-		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(request.getId());
+		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(jsonDataId.getId());
 		assertEquals(expectedUniqueIds, actualUniqueIds);
 	}
 
@@ -122,7 +122,7 @@ public class TimeSeriesDescriptionDaoIT {
 
 	@DatabaseSetup("classpath:/testData/timeSeriesDescription/existingData/")
 	@Test
-	public void testUpsertAttemptsWithSameDataShouldYieldNoChangesAndReturnsEmptyList() throws IOException {
+	public void testUpsertWithSameDataShouldYieldNoChangesAndReturnsEmptyList() throws IOException {
 
 		jsonDataId.setId(265L);
 		List<String> expectedUniqueIds = Arrays.asList();
@@ -149,15 +149,59 @@ public class TimeSeriesDescriptionDaoIT {
 		assertEquals(expectedUniqueIds, actualUniqueIds);
 	}
 
-//	@Test
-//	@ExpectedDatabase(
-//			connection="schema_name",
-//			value="classpath:/testResult/timeSeriesDescription/happyPath/",
-//			assertionMode= DatabaseAssertionMode.NON_STRICT_UNORDERED,
-//			table= "time_series_description",
-//			query= "upsert query goes here")
-//	public void testHappyPathTableState() throws IOException {
-//
-//	}
+	@Test
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
+	@ExpectedDatabase(
+			value="classpath:/testResult/timeSeriesDescription/happyPath/",
+			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
+	public void testIfNewDataThen46NewRecordsShouldBeInsertedAnd46UniqueIdsShouldBeReturned() throws IOException {
 
+		jsonDataId.setId(265L);
+
+		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(jsonDataId.getId());
+		assertTrue(actualUniqueIds.size() == 46);
+	}
+
+	@Test
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/existingData/")
+	@ExpectedDatabase(
+			value="classpath:/testResult/timeSeriesDescription/happyPath/",
+			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
+	public void testIfNoNewDataThenTableStateShouldRemainTheSameAndNoUniqueIdsShouldBeReturned() throws IOException {
+
+		jsonDataId.setId(265L);
+
+		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(jsonDataId.getId());
+		assertTrue(actualUniqueIds.size() == 0);
+	}
+
+	@Test
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
+	@ExpectedDatabase(
+			value="classpath:/testResult/timeSeriesDescription/empty/",
+			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
+	public void testUpsertWithThreeRecordsThatAreNewerThanTheExistingDataShouldReturn3UniqueIds() throws IOException {
+
+		jsonDataId.setId(500L);
+
+		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(jsonDataId.getId());
+		assertTrue(actualUniqueIds.size() == 0);
+	}
+
+	@Test
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/existingStaleData/")
+	@ExpectedDatabase(
+			value="classpath:/testResult/timeSeriesDescription/happyPath/",
+			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
+	public void testUpsertAttemptWithThreeRecordsThatAreNewerThanTheExistingDataShouldUpdateThoseRecords() throws IOException {
+
+		jsonDataId.setId(265L);
+
+		List<String> actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(jsonDataId.getId());
+		assertTrue(actualUniqueIds.size() == 3);
+
+		// A subsequent upsert with the same data should yield no changes to the table state
+		actualUniqueIds = tsdDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(jsonDataId.getId());
+		assertTrue(actualUniqueIds.size() == 0);
+	}
 }
