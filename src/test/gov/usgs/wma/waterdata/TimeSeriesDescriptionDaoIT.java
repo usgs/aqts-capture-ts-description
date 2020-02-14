@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -46,8 +44,6 @@ import java.util.List;
 @DirtiesContext
 public class TimeSeriesDescriptionDaoIT {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TimeSeriesDescriptionDaoIT.class);
-
 	@Autowired
 	private TimeSeriesDescriptionDao tsdDao;
 	private RequestObject jsonDataId = new RequestObject();
@@ -59,6 +55,7 @@ public class TimeSeriesDescriptionDaoIT {
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testInsert() throws IOException {
 
+		// insert new data, return unique ids
 		jsonDataId.setId(265L);
 		List<String> expectedIds = Arrays.asList(
 				"01c56d4c5d2143f4b039e78c5f43a2d3",
@@ -75,15 +72,21 @@ public class TimeSeriesDescriptionDaoIT {
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testInsertMultiple() throws IOException {
 
+		// insert new data, return unique ids
 		jsonDataId.setId(265L);
-		tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
-
-		jsonDataId.setId(319L);
+		List<String> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
 		List<String> expectedIds = Arrays.asList(
+				"01c56d4c5d2143f4b039e78c5f43a2d3",
+				"07ac715d9db84117b2971df3d63b0837",
+				"0f083f2f9dfd4cb6af6c10ca6a20c3bb");
+		assertEquals(expectedIds, actualIds);
+
+		// insert more new data, return corresponding unique ids
+		jsonDataId.setId(319L);
+		actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		expectedIds = Arrays.asList(
 				"016f54d5fd964c08963bc3531e185c9f",
 				"080e771673ff413fa0ed4496f2b3287c");
-
-		List<String> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
 		assertEquals(expectedIds, actualIds);
 	}
 
@@ -92,11 +95,12 @@ public class TimeSeriesDescriptionDaoIT {
 	@ExpectedDatabase(
 			value="classpath:/testResult/timeSeriesDescription/empty/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
-	public void testNoInsertIfBadJsonDataId() throws IOException {
+	public void testNoInsertIfJsonDataIdNotFound() throws IOException {
 
+		// try to upsert data using a json data id that was not found, no upsert, return no unique ids
 		jsonDataId.setId(500L);
-		List<String> expectedIds = Arrays.asList();
 		List<String> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		List<String> expectedIds = Arrays.asList();
 		assertEquals(expectedIds, actualIds);
 	}
 
@@ -107,12 +111,13 @@ public class TimeSeriesDescriptionDaoIT {
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testUpdate() throws IOException {
 
+		// update old data, return unique ids
 		jsonDataId.setId(265L);
+		List<String> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
 		List<String> expectedIds = Arrays.asList(
 				"01c56d4c5d2143f4b039e78c5f43a2d3",
 				"07ac715d9db84117b2971df3d63b0837"
 		);
-		List<String> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
 		assertEquals(expectedIds, actualIds);
 	}
 
@@ -123,10 +128,10 @@ public class TimeSeriesDescriptionDaoIT {
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testNoUpdateIfSameData() throws IOException {
 
+		// try to update data that is already current, no update, return no unique ids
 		jsonDataId.setId(265L);
-
-		List<String> expectedIds = Arrays.asList();
 		List<String> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		List<String> expectedIds = Arrays.asList();
 		assertEquals(expectedIds, actualIds);
 	}
 }

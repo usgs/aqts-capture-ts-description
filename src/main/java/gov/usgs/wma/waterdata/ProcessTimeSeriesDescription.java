@@ -1,6 +1,6 @@
 package gov.usgs.wma.waterdata;
 
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -10,12 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProcessTimeSeriesDescription implements Function<RequestObject, Object> {
+public class ProcessTimeSeriesDescription implements Function<RequestObject, ResultObject> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProcessTimeSeriesDescription.class);
 
+	private TimeSeriesDescriptionDao tsdDao;
+
 	@Autowired
-	TimeSeriesDescriptionDao timeSeriesDescriptionDao;
+	public ProcessTimeSeriesDescription(TimeSeriesDescriptionDao tsdDao) {
+		this.tsdDao = tsdDao;
+	}
 
 	@Override
 	public  ResultObject apply(RequestObject request) {
@@ -24,17 +28,15 @@ public class ProcessTimeSeriesDescription implements Function<RequestObject, Obj
 
 	protected ResultObject processRequest(RequestObject request) {
 
+		Long jsonDataId = request.getId();
 		ResultObject result = new ResultObject();
-		LOG.info("processing json_data_id: {}", request.getId());
 
-		try {
-			List<String> uniqueIds = timeSeriesDescriptionDao.upsertTimeSeriesDescription(request.getId());
+		if (null != jsonDataId) {
+			LOG.info("the tsDao: {} , the jsonDataId: {} , the request: {}", tsdDao, jsonDataId, request);
+			List<String> uniqueIds = tsdDao.upsertTimeSeriesDescription(jsonDataId);
 			result.setUniqueIds(uniqueIds);
-			LOG.info("updated or inserted uniqueIds: {}", result.getUniqueIds());
-		} catch (IOException e) {
-			LOG.error(e.getLocalizedMessage());
+			LOG.debug("Successfully processed json data id: {} and upserted unique ids: {}", jsonDataId, result.getUniqueIds());
 		}
-
 		return result;
 	}
 }
