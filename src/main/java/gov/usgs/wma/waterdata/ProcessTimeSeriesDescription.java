@@ -28,7 +28,7 @@ public class ProcessTimeSeriesDescription implements Function<RequestObject, Obj
 		LOG.info("processing json_data_id: {}", request.getId());
 
 		try {
-			List<String> uniqueIds = timeSeriesDescriptionDao.upsertTimeSeriesDescriptionsForSingleJsonDataId(request.getId());
+			List<String> uniqueIds = timeSeriesDescriptionDao.upsertTimeSeriesDescription(request.getId());
 			result.setUniqueIds(uniqueIds);
 			LOG.info("updated or inserted uniqueIds: {}", result.getUniqueIds());
 		} catch (IOException e) {

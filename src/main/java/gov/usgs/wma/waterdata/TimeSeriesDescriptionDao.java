@@ -19,7 +19,7 @@ public class TimeSeriesDescriptionDao {
 	@Value("classpath:sql/upsertTimeSeriesDescriptions.sql")
 	protected Resource upsertTimeSeriesDescriptions;
 
-	public List<String> upsertTimeSeriesDescriptionsForSingleJsonDataId(Long jsonDataId) throws IOException {
+	public List<String> upsertTimeSeriesDescription(Long jsonDataId) throws IOException {
 
 		String sql = new String(FileCopyUtils.copyToByteArray(upsertTimeSeriesDescriptions.getInputStream()));
 		Object[] theJsonDataId = {jsonDataId};
