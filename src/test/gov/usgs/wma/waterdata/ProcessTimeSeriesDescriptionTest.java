@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,16 +30,22 @@ public class ProcessTimeSeriesDescriptionTest {
 	}
 
 	@Test
-	public void notFoundTest() {
+	public void testNotFound() {
+		when(tsdDao.upsertTimeSeriesDescription(anyLong())).thenReturn(Arrays.asList());
 		ResultObject result = processTsd.apply(request);
-		when(tsdDao.upsertTimeSeriesDescription(request.getId())).thenReturn(Arrays.asList());
 		assertNotNull(result);
 		List<String> uniqueIds = Arrays.asList();
 		assertEquals(uniqueIds, result.getUniqueIds());
 	}
 
 	@Test
-	public void testProcessRequestValidJsonDataId() {
-
+	public void testFoundGeneric() {
+		List<String> expectedUniqueIds = Arrays.asList(
+				"uniqueId",
+				"anotherUniqueId");
+		when(tsdDao.upsertTimeSeriesDescription(anyLong())).thenReturn(expectedUniqueIds);
+		ResultObject result = processTsd.apply(request);
+		assertNotNull(result);
+		assertEquals(result.getUniqueIds(), expectedUniqueIds);
 	}
 }

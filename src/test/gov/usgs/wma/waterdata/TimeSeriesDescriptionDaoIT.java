@@ -60,7 +60,8 @@ public class TimeSeriesDescriptionDaoIT {
 		List<String> expectedIds = Arrays.asList(
 				"01c56d4c5d2143f4b039e78c5f43a2d3",
 				"07ac715d9db84117b2971df3d63b0837",
-				"0f083f2f9dfd4cb6af6c10ca6a20c3bb");
+				"0f083f2f9dfd4cb6af6c10ca6a20c3bb",
+				"10ed515c40b9430096ef44f9afdb5fe7");
 		List<String> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
 		assertEquals(expectedIds, actualIds);
 	}
@@ -78,7 +79,8 @@ public class TimeSeriesDescriptionDaoIT {
 		List<String> expectedIds = Arrays.asList(
 				"01c56d4c5d2143f4b039e78c5f43a2d3",
 				"07ac715d9db84117b2971df3d63b0837",
-				"0f083f2f9dfd4cb6af6c10ca6a20c3bb");
+				"0f083f2f9dfd4cb6af6c10ca6a20c3bb",
+				"10ed515c40b9430096ef44f9afdb5fe7");
 		assertEquals(expectedIds, actualIds);
 
 		// insert more new data, return corresponding unique ids
@@ -86,7 +88,8 @@ public class TimeSeriesDescriptionDaoIT {
 		actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
 		expectedIds = Arrays.asList(
 				"016f54d5fd964c08963bc3531e185c9f",
-				"080e771673ff413fa0ed4496f2b3287c");
+				"080e771673ff413fa0ed4496f2b3287c",
+				"1349b688bdf24c19a14ce2f6bb8da40a");
 		assertEquals(expectedIds, actualIds);
 	}
 

@@ -3,7 +3,7 @@
     "name": "AQTS Capture Time Series Description",
     "organization": "U.S. Geological Survey",
     "description": "Processes time series descriptions",
-    "version": "0.1.0",
+    "version": "0.0.${revision}",
     "status": "Development",
 
     "permissions": {
@@ -41,7 +41,7 @@
     },
 
     "date": {
-      "metadataLastUpdated": "2020-01-30"
+      "metadataLastUpdated": "2020-02-18"
     }
   }
 ]

@@ -1,5 +1,3 @@
-# serverless.yml
-
 service: aqts-capture-ts-description
 
 provider:
@@ -16,6 +14,7 @@ provider:
     "wma:applicationId": "AQTS Capture Time Series Description"
     "wma:contact": "Jim Kreft jkreft@usgs.gov"
     "wma:environment": ${self:provider.stage}
+    "wma:taggingVersion": ${opt:taggingVersion}
     "wma:costCenter": TBD
 
 custom:
@@ -42,4 +41,4 @@ functions:
     vpc: ${self:custom.vpc}
 
 package:
-  artifact: /build/target/aqts-capture-ts-description-0.0.0-SNAPSHOT-aws.jar
+  artifact: aqts-capture-ts-description-aws.jar
