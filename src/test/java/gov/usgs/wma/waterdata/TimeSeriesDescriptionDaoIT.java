@@ -53,7 +53,7 @@ public class TimeSeriesDescriptionDaoIT {
 	@ExpectedDatabase(
 			value="classpath:/testResult/timeSeriesDescription/singleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
-	public void testInsert() throws IOException {
+	public void testInsert() {
 
 		// insert new data, return unique ids
 		jsonDataId.setId(265L);
@@ -71,7 +71,7 @@ public class TimeSeriesDescriptionDaoIT {
 	@ExpectedDatabase(
 			value="classpath:/testResult/timeSeriesDescription/multipleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
-	public void testInsertMultiple() throws IOException {
+	public void testInsertMultiple() {
 
 		// insert new data, return unique ids
 		jsonDataId.setId(265L);
@@ -98,7 +98,7 @@ public class TimeSeriesDescriptionDaoIT {
 	@ExpectedDatabase(
 			value="classpath:/testResult/timeSeriesDescription/empty/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
-	public void testNoInsertIfJsonDataIdNotFound() throws IOException {
+	public void testNoInsertIfJsonDataIdNotFound() {
 
 		// try to upsert data using a json data id that was not found, no upsert, return no unique ids
 		jsonDataId.setId(500L);
@@ -112,7 +112,7 @@ public class TimeSeriesDescriptionDaoIT {
 	@ExpectedDatabase(
 			value="classpath:/testResult/timeSeriesDescription/singleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
-	public void testUpdate() throws IOException {
+	public void testUpdate() {
 
 		// update old data, return unique ids
 		jsonDataId.setId(265L);
@@ -129,7 +129,7 @@ public class TimeSeriesDescriptionDaoIT {
 	@ExpectedDatabase(
 			value="classpath:/testResult/timeSeriesDescription/singleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
-	public void testNoUpdateIfSameData() throws IOException {
+	public void testNoUpdateIfSameData() {
 
 		// try to update data that is already current, no update, return no unique ids
 		jsonDataId.setId(265L);
