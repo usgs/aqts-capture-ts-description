@@ -1,0 +1,5 @@
+.idea/
+aqts-capture-ts-description.iml
+/application.yml
+/.flattened-pom.xml
+target/
