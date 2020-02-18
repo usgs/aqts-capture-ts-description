@@ -30,13 +30,14 @@ public class ProcessTimeSeriesDescription implements Function<RequestObject, Res
 
 		Long jsonDataId = request.getId();
 		ResultObject result = new ResultObject();
-		// return an empty list if the json data id is null
-		result.setUniqueIds(Arrays.asList());
 
 		if (null != jsonDataId) {
 			List<String> uniqueIds = tsdDao.upsertTimeSeriesDescription(jsonDataId);
 			result.setUniqueIds(uniqueIds);
 			LOG.debug("Successfully processed json data id: {} and upserted unique ids: {}", jsonDataId, result.getUniqueIds());
+		} else {
+			// return an empty list if the json data id is null
+			result.setUniqueIds(Arrays.asList());
 		}
 		return result;
 	}

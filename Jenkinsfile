@@ -22,13 +22,13 @@ pipeline {
                 dockerfile true
             }
             steps {
-				sh '''
-				curl ${SHADED_JAR_ARTIFACT_URL} -Lo aqts-capture-ts-description-aws.jar
-				ls -al
-				npm install serverless
-				ls -al
-				./node_modules/serverless/bin/serverless deploy --stage ${DEPLOY_STAGE} --taggingVersion ${SHADED_JAR_VERSION}
-				'''
+                sh '''
+                curl ${SHADED_JAR_ARTIFACT_URL} -Lo aqts-capture-ts-description-aws.jar
+                ls -al
+                npm install serverless
+                ls -al
+                ./node_modules/serverless/bin/serverless deploy --stage ${DEPLOY_STAGE} --taggingVersion ${SHADED_JAR_VERSION}
+                '''
             }
         }
     }
