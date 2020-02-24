@@ -34,18 +34,18 @@ public class ProcessTimeSeriesDescriptionTest {
 		when(tsdDao.upsertTimeSeriesDescription(anyLong())).thenReturn(Arrays.asList());
 		ResultObject result = processTsd.apply(request);
 		assertNotNull(result);
-		List<String> uniqueIds = Arrays.asList();
-		assertEquals(uniqueIds, result.getUniqueIds());
+		List<String> timeSeriesList = Arrays.asList();
+		assertEquals(timeSeriesList, result.getTimeSeriesList());
 	}
 
 	@Test
 	public void testFoundGeneric() {
-		List<String> expectedUniqueIds = Arrays.asList(
-				"uniqueId",
-				"anotherUniqueId");
-		when(tsdDao.upsertTimeSeriesDescription(anyLong())).thenReturn(expectedUniqueIds);
+		List<TimeSeries> expectedTimeSeriesList = Arrays.asList(
+				new TimeSeries("uniqueId"),
+				new TimeSeries("anotherUniqueId"));
+		when(tsdDao.upsertTimeSeriesDescription(anyLong())).thenReturn(expectedTimeSeriesList);
 		ResultObject result = processTsd.apply(request);
 		assertNotNull(result);
-		assertEquals(result.getUniqueIds(), expectedUniqueIds);
+		assertEquals(result.getTimeSeriesList(), expectedTimeSeriesList);
 	}
 }

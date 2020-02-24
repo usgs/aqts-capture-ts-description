@@ -3,3 +3,6 @@ aqts-capture-ts-description.iml
 /application.yml
 /.flattened-pom.xml
 target/
+/.settings/
+/.classpath
+/.project
