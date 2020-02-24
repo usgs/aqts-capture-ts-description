@@ -1,6 +1,5 @@
 package gov.usgs.wma.waterdata;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -32,12 +31,9 @@ public class ProcessTimeSeriesDescription implements Function<RequestObject, Res
 		ResultObject result = new ResultObject();
 
 		if (null != jsonDataId) {
-			List<String> uniqueIds = tsdDao.upsertTimeSeriesDescription(jsonDataId);
-			result.setUniqueIds(uniqueIds);
-			LOG.debug("Successfully processed json data id: {} and upserted unique ids: {}", jsonDataId, result.getUniqueIds());
-		} else {
-			// return an empty list if the json data id is null
-			result.setUniqueIds(Arrays.asList());
+			List<TimeSeries> timeSeriesList = tsdDao.upsertTimeSeriesDescription(jsonDataId);
+			result.setTimeSeriesList(timeSeriesList);
+			LOG.debug("Successfully processed json data id: {} and upserted unique ids: {}", jsonDataId, result.getTimeSeriesList());
 		}
 		return result;
 	}

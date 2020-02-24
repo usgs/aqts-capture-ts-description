@@ -25,21 +25,21 @@ public class TimeSeriesDescriptionDao {
 	@Value("classpath:sql/upsertTimeSeriesDescriptions.sql")
 	protected Resource sqlQuery;
 
-	public List<String> upsertTimeSeriesDescription(Long jsonDataId) {
-		List<String> timeSeriesUniqueIds = Arrays.asList();
+	public List<TimeSeries> upsertTimeSeriesDescription(Long jsonDataId) {
+		List<TimeSeries> timeSeriesList = Arrays.asList();
 		try {
 			String sql = new String(FileCopyUtils.copyToByteArray(sqlQuery.getInputStream()));
-			Object[] theJsonDataId = {jsonDataId};
-			timeSeriesUniqueIds = jdbcTemplate.queryForList(
+			timeSeriesList = jdbcTemplate.query(
 					sql,
-					theJsonDataId,
-					String.class);
+					new TimeSeriesRowMapper(),
+					jsonDataId
+					);
 		} catch (EmptyResultDataAccessException e) {
 			LOG.info("Couldn't find {} - {} ", jsonDataId, e.getLocalizedMessage());
 		} catch (IOException e) {
 			LOG.error("Unable to get SQL statement", e);
 			throw new RuntimeException(e);
 		}
-		return timeSeriesUniqueIds;
+		return timeSeriesList;
 	}
 }
