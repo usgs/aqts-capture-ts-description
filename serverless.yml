@@ -26,7 +26,7 @@ custom:
     connectInfo: ${ssm:/aws/reference/secretsmanager/NWCAPTURE-DB-${self:provider.stage}~true}
 
 functions:
-  processTimeSeriesDescription:
+  processTsDescription:
     handler: gov.usgs.wma.waterdata.ProcessTimeSeriesDescriptionHandler
     role: arn:aws:iam::${self:custom.accountNumber}:role/csr-Lambda-Role
     environment:
