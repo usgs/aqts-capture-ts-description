@@ -121,7 +121,9 @@ public class TimeSeriesDescriptionDaoIT {
 		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
 		List<TimeSeries> expectedIds = Arrays.asList(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
-				new TimeSeries("07ac715d9db84117b2971df3d63b0837")
+				new TimeSeries("07ac715d9db84117b2971df3d63b0837"),
+				new TimeSeries("0f083f2f9dfd4cb6af6c10ca6a20c3bb"),
+				new TimeSeries("10ed515c40b9430096ef44f9afdb5fe7")
 				);
 		assertEquals(expectedIds, actualIds);
 	}
@@ -137,6 +139,24 @@ public class TimeSeriesDescriptionDaoIT {
 		jsonDataId.setId(265L);
 		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
 		List<TimeSeries> expectedIds = Arrays.asList();
+		assertEquals(expectedIds, actualIds);
+	}
+
+	@Test
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
+	@ExpectedDatabase(
+			value="classpath:/testResult/timeSeriesDescription/handleMicroseconds/",
+			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
+	public void testMicrosecondHandling() {
+		
+		jsonDataId.setId(1L);
+		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		List<TimeSeries> expectedIds = Arrays.asList(
+				new TimeSeries("testId1"),
+				new TimeSeries("testId2"),
+				new TimeSeries("testId3"),
+				new TimeSeries("testId4")
+		);
 		assertEquals(expectedIds, actualIds);
 	}
 }
