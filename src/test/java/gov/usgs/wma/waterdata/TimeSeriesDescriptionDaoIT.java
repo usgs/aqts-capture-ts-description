@@ -148,7 +148,8 @@ public class TimeSeriesDescriptionDaoIT {
 			value="classpath:/testResult/timeSeriesDescription/handleMicroseconds/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testMicrosecondHandling() {
-		
+
+		// This is to ensure we handle fractional seconds on timestamps appropriately
 		jsonDataId.setId(1L);
 		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
 		List<TimeSeries> expectedIds = Arrays.asList(
