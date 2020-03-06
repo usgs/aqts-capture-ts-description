@@ -1,1 +1,1 @@
-"time_series_unique_id","utc_offset","unit","label","parameter","parm_cd","stat_cd","last_modified","corrected_start_time","corrected_end_time","location_identifier","computation_period_identifier","response_time","response_version", "extended_attributes"
+"time_series_unique_id","utc_offset","unit","label","parameter","parm_cd","stat_cd","last_modified","corrected_start_time","corrected_end_time","location_identifier","computation_period_identifier","response_time","response_version", "extended_attributes","computation_identifier"
