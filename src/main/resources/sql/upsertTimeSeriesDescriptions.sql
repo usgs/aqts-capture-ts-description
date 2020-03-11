@@ -42,7 +42,7 @@ from
         jsonb_extract_path_text(time_series_descriptions, 'Label') as label,
         jsonb_extract_path_text(time_series_descriptions, 'UniqueId') time_series_unique_id,
         jsonb_extract_path_text(time_series_descriptions, 'Parameter') as parameter,
-        jsonb_extract_path_text(time_series_descriptions, 'UtcOffset')::integer utc_offset,
+        jsonb_extract_path_text(time_series_descriptions, 'UtcOffset')::numeric utc_offset,
         adjust_timestamp(jsonb_extract_path_text(time_series_descriptions, 'LastModified')) last_modified,
         adjust_timestamp(jsonb_extract_path_text(time_series_descriptions, 'CorrectedStartTime')) corrected_start_time,
         adjust_timestamp(jsonb_extract_path_text(time_series_descriptions, 'CorrectedEndTime')) corrected_end_time,
