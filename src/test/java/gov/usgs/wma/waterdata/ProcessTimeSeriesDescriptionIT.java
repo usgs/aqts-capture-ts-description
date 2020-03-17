@@ -1,5 +1,7 @@
 package gov.usgs.wma.waterdata;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
@@ -68,13 +70,12 @@ public class ProcessTimeSeriesDescriptionIT {
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testProcessRequestSingleUpsert() {
 		ResultObject result = processTsd.processRequest(request);
-		List<TimeSeries> expectedIds = Arrays.asList(
+		assertThat(result.getTimeSeriesList(), containsInAnyOrder(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
 				new TimeSeries("07ac715d9db84117b2971df3d63b0837"),
 				new TimeSeries("0f083f2f9dfd4cb6af6c10ca6a20c3bb"),
 				new TimeSeries("10ed515c40b9430096ef44f9afdb5fe7")
-		);
-		assertEquals(expectedIds, result.getTimeSeriesList());
+		));
 	}
 
 	@Test
@@ -85,23 +86,21 @@ public class ProcessTimeSeriesDescriptionIT {
 	public void testProcessRequestMultipleUpsert() {
 		// first upsert
 		ResultObject result = processTsd.processRequest(request);
-		List<TimeSeries> expectedIds = Arrays.asList(
+		assertThat(result.getTimeSeriesList(), containsInAnyOrder(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
 				new TimeSeries("07ac715d9db84117b2971df3d63b0837"),
 				new TimeSeries("0f083f2f9dfd4cb6af6c10ca6a20c3bb"),
 				new TimeSeries("10ed515c40b9430096ef44f9afdb5fe7")
-		);
-		assertEquals(expectedIds, result.getTimeSeriesList());
+		));
 
 		// second upsert
 		request.setId(319L);
 		result = processTsd.processRequest(request);
-		expectedIds = Arrays.asList(
+		assertThat(result.getTimeSeriesList(), containsInAnyOrder(
 				new TimeSeries("016f54d5fd964c08963bc3531e185c9f"),
 				new TimeSeries("080e771673ff413fa0ed4496f2b3287c"),
 				new TimeSeries("1349b688bdf24c19a14ce2f6bb8da40a")
-		);
-		assertEquals(expectedIds, result.getTimeSeriesList());
+		));
 	}
 
 	@Test
@@ -126,13 +125,12 @@ public class ProcessTimeSeriesDescriptionIT {
 		// update old data, return unique ids
 		request.setId(265L);
 		ResultObject result = processTsd.processRequest(request);
-		List<TimeSeries> expectedIds = Arrays.asList(
+		assertThat(result.getTimeSeriesList(), containsInAnyOrder(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
 				new TimeSeries("07ac715d9db84117b2971df3d63b0837"),
 				new TimeSeries("0f083f2f9dfd4cb6af6c10ca6a20c3bb"),
 				new TimeSeries("10ed515c40b9430096ef44f9afdb5fe7")
-		);
-		assertEquals(expectedIds, result.getTimeSeriesList());
+		));
 	}
 
 	@Test
