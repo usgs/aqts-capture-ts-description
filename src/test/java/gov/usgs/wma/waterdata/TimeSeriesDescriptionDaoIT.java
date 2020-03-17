@@ -1,8 +1,9 @@
 package gov.usgs.wma.waterdata;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -56,14 +57,13 @@ public class TimeSeriesDescriptionDaoIT {
 
 		// insert new data, return unique ids
 		jsonDataId.setId(265L);
-		List<TimeSeries> expectedIds = Arrays.asList(
+		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		assertThat(actualIds, containsInAnyOrder(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
 				new TimeSeries("07ac715d9db84117b2971df3d63b0837"),
 				new TimeSeries("0f083f2f9dfd4cb6af6c10ca6a20c3bb"),
 				new TimeSeries("10ed515c40b9430096ef44f9afdb5fe7")
-				);
-		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
-		assertEquals(expectedIds, actualIds);
+				));
 	}
 
 	@Test
@@ -76,23 +76,21 @@ public class TimeSeriesDescriptionDaoIT {
 		// insert new data, return unique ids
 		jsonDataId.setId(265L);
 		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
-		List<TimeSeries> expectedIds = Arrays.asList(
+		assertThat(actualIds, containsInAnyOrder(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
 				new TimeSeries("07ac715d9db84117b2971df3d63b0837"),
 				new TimeSeries("0f083f2f9dfd4cb6af6c10ca6a20c3bb"),
 				new TimeSeries("10ed515c40b9430096ef44f9afdb5fe7")
-				);
-		assertEquals(expectedIds, actualIds);
+				));
 
 		// insert more new data, return corresponding unique ids
 		jsonDataId.setId(319L);
 		actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
-		expectedIds = Arrays.asList(
+		assertThat(actualIds, containsInAnyOrder(
 				new TimeSeries("016f54d5fd964c08963bc3531e185c9f"),
 				new TimeSeries("080e771673ff413fa0ed4496f2b3287c"),
 				new TimeSeries("1349b688bdf24c19a14ce2f6bb8da40a")
-				);
-		assertEquals(expectedIds, actualIds);
+				));
 	}
 
 	@Test
@@ -105,8 +103,7 @@ public class TimeSeriesDescriptionDaoIT {
 		// try to upsert data using a json data id that was not found, no upsert, return no unique ids
 		jsonDataId.setId(500L);
 		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
-		List<TimeSeries> expectedIds = Arrays.asList();
-		assertEquals(expectedIds, actualIds);
+		assertTrue(actualIds.isEmpty());
 	}
 
 	@Test
@@ -119,13 +116,12 @@ public class TimeSeriesDescriptionDaoIT {
 		// update old data, return unique ids
 		jsonDataId.setId(265L);
 		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
-		List<TimeSeries> expectedIds = Arrays.asList(
+		assertThat(actualIds, containsInAnyOrder(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
 				new TimeSeries("07ac715d9db84117b2971df3d63b0837"),
 				new TimeSeries("0f083f2f9dfd4cb6af6c10ca6a20c3bb"),
 				new TimeSeries("10ed515c40b9430096ef44f9afdb5fe7")
-				);
-		assertEquals(expectedIds, actualIds);
+				));
 	}
 
 	@Test
@@ -138,8 +134,7 @@ public class TimeSeriesDescriptionDaoIT {
 		// try to update data that is already current, no update, return no unique ids
 		jsonDataId.setId(265L);
 		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
-		List<TimeSeries> expectedIds = Arrays.asList();
-		assertEquals(expectedIds, actualIds);
+		assertTrue(actualIds.isEmpty());
 	}
 
 	@Test
@@ -152,12 +147,11 @@ public class TimeSeriesDescriptionDaoIT {
 		// This is to ensure we handle fractional seconds on timestamps appropriately
 		jsonDataId.setId(1L);
 		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
-		List<TimeSeries> expectedIds = Arrays.asList(
+		assertThat(actualIds, containsInAnyOrder(
 				new TimeSeries("testId1"),
 				new TimeSeries("testId2"),
 				new TimeSeries("testId3"),
 				new TimeSeries("testId4")
-		);
-		assertEquals(expectedIds, actualIds);
+				));
 	}
 }
