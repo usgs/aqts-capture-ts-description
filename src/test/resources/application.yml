@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${AQTS_DATABASE_ADDRESS}:${AQTS_DATABASE_PORT}/${AQTS_DATABASE_NAME}?currentSchema=${AQTS_SCHEMA_NAME}
-    username: ${AQTS_SCHEMA_OWNER_USERNAME}
-    password: ${AQTS_SCHEMA_OWNER_PASSWORD}
+    url: jdbc:postgresql://${TRANSFORM_DATABASE_ADDRESS}:${TRANSFORM_DATABASE_PORT}/${TRANSFORM_DATABASE_NAME}?currentSchema=${TRANSFORM_SCHEMA_NAME}
+    username: ${TRANSFORM_SCHEMA_OWNER_USERNAME}
+    password: ${TRANSFORM_SCHEMA_OWNER_PASSWORD}
     hikari:
       maximum-pool-size: 2
 

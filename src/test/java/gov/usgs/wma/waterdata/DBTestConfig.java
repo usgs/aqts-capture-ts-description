@@ -19,7 +19,7 @@ public class DBTestConfig {
 	@Autowired
 	public DataSource dataSource;
 
-	@Value("${AQTS_SCHEMA_NAME}")
+	@Value("${TRANSFORM_SCHEMA_NAME}")
 	private String schemaName;
 
 	@Bean

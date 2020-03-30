@@ -22,9 +22,27 @@ To run the unit tests of the application use:
 mvn package
 ```
 
-### Database Integration Testing
+### Database Integration Testing with Maven
 To additionally start up a Docker database and run the integration tests of the application use:
 
 ```.sh
 mvn verify
+```
+
+### Database Integration Testing with an IDE
+To run integration tests against a local Docker database use:
+
+```.sh
+docker run -p 127.0.0.1:5437:5432/tcp usgswma/aqts_capture_db:ci
+```
+
+Additionally, add an application.yml configuration file at the project root (the following is an example):
+
+```.yaml
+TRANSFORM_DATABASE_ADDRESS: localhost
+TRANSFORM_DATABASE_PORT: 5437
+TRANSFORM_DATABASE_NAME: database_name
+TRANSFORM_SCHEMA_NAME: schema_name
+TRANSFORM_SCHEMA_OWNER_USERNAME: schema_owner
+TRANSFORM_SCHEMA_OWNER_PASSWORD: changeMe
 ```
