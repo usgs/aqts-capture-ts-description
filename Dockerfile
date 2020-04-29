@@ -1,4 +1,4 @@
-FROM usgswma/python:debian-slim-buster-python-3.8
+FROM usgswma/python:3.8
 
 RUN apt-get install -y curl git
 RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - && apt-get install -y nodejs
