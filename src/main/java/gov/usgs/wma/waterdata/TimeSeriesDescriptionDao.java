@@ -25,14 +25,15 @@ public class TimeSeriesDescriptionDao {
 	@Value("classpath:sql/upsertTimeSeriesDescriptions.sql")
 	protected Resource sqlQuery;
 
-	public List<TimeSeries> upsertTimeSeriesDescription(Long jsonDataId) {
+	public List<TimeSeries> upsertTimeSeriesDescription(Long jsonDataId, Integer partitionNumber) {
 		List<TimeSeries> timeSeriesList = Arrays.asList();
 		try {
 			String sql = new String(FileCopyUtils.copyToByteArray(sqlQuery.getInputStream()));
 			timeSeriesList = jdbcTemplate.query(
 					sql,
 					new TimeSeriesRowMapper(),
-					jsonDataId
+					jsonDataId,
+					partitionNumber
 					);
 		} catch (EmptyResultDataAccessException e) {
 			LOG.info("Couldn't find {} - {} ", jsonDataId, e.getLocalizedMessage());

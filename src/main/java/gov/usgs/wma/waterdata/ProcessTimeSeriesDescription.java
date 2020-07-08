@@ -31,7 +31,7 @@ public class ProcessTimeSeriesDescription implements Function<RequestObject, Res
 		ResultObject result = new ResultObject();
 
 		if (null != jsonDataId) {
-			List<TimeSeries> timeSeriesList = tsdDao.upsertTimeSeriesDescription(jsonDataId);
+			List<TimeSeries> timeSeriesList = tsdDao.upsertTimeSeriesDescription(jsonDataId, request.getPartitionNumber());
 			result.setTimeSeriesList(timeSeriesList);
 			LOG.debug("Successfully processed json data id: {} and upserted unique ids: {}", jsonDataId, result.getTimeSeriesList());
 		}

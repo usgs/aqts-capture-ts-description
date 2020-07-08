@@ -40,6 +40,7 @@ functions:
       AQTS_SCHEMA_NAME: ${self:custom.db.connectInfo.SCHEMA_NAME}
       AQTS_SCHEMA_OWNER_USERNAME: ${self:custom.db.connectInfo.SCHEMA_OWNER_USERNAME}
       AQTS_SCHEMA_OWNER_PASSWORD: ${self:custom.db.connectInfo.SCHEMA_OWNER_PASSWORD}
+      ROOT_LOG_LEVEL: INFO
     vpc: ${self:custom.vpc}
 
 resources:

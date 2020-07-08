@@ -59,6 +59,7 @@ from
         jsonb_extract_path_text(json_content, 'ResponseVersion')::integer response_version
         from json_data
         where json_data_id = ?
+        and partition_number = ?
     ) as a
 )
 as b

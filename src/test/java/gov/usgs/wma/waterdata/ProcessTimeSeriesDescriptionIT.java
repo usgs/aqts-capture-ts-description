@@ -27,7 +27,6 @@ import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 
-import javax.xml.transform.Result;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,18 +54,18 @@ public class ProcessTimeSeriesDescriptionIT {
 	public ProcessTimeSeriesDescription processTsd;
 
 	public RequestObject request;
-	public static final Long tsUniqueId = 265L;
 
 	@BeforeEach
 	public void setup() {
 		request = new RequestObject();
-		request.setId(tsUniqueId);
+		request.setId(TimeSeriesDescriptionDaoIT.JSON_DATA_ID_265);
+		request.setPartitionNumber(TimeSeriesDescriptionDaoIT.PARTITION_NUMBER);
 	}
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
+	@DatabaseSetup("classpath:/testResult/empty/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/singleUpsert/",
+			value="classpath:/testResult/singleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testProcessRequestSingleUpsert() {
 		ResultObject result = processTsd.processRequest(request);
@@ -79,9 +78,9 @@ public class ProcessTimeSeriesDescriptionIT {
 	}
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
+	@DatabaseSetup("classpath:/testResult/empty/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/multipleUpsert/",
+			value="classpath:/testResult/multipleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testProcessRequestMultipleUpsert() {
 		// first upsert
@@ -94,7 +93,7 @@ public class ProcessTimeSeriesDescriptionIT {
 		));
 
 		// second upsert
-		request.setId(319L);
+		request.setId(TimeSeriesDescriptionDaoIT.JSON_DATA_ID_319);
 		result = processTsd.processRequest(request);
 		assertThat(result.getTimeSeriesList(), containsInAnyOrder(
 				new TimeSeries("016f54d5fd964c08963bc3531e185c9f"),
@@ -104,26 +103,24 @@ public class ProcessTimeSeriesDescriptionIT {
 	}
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
+	@DatabaseSetup("classpath:/testResult/empty/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/empty/",
+			value="classpath:/testResult/empty/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testNoInsertIfJsonDataIdNotFound() {
 		// try to upsert data using a json data id that was not found, no upsert, return no unique ids
-		request.setId(500L);
+		request.setId(TimeSeriesDescriptionDaoIT.JSON_DATA_ID_500);
 		ResultObject result = processTsd.processRequest(request);
-		List<TimeSeries> expectedIds = Arrays.asList();
-		assertEquals(expectedIds, result.getTimeSeriesList());
+		assertEquals(Arrays.asList(), result.getTimeSeriesList());
 	}
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/existingOldData/")
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/staleData/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/singleUpsert/",
+			value="classpath:/testResult/singleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testUpdate() {
 		// update old data, return unique ids
-		request.setId(265L);
 		ResultObject result = processTsd.processRequest(request);
 		assertThat(result.getTimeSeriesList(), containsInAnyOrder(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
@@ -134,14 +131,13 @@ public class ProcessTimeSeriesDescriptionIT {
 	}
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/existingData/")
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/currentData/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/singleUpsert/",
+			value="classpath:/testResult/singleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testNoUpdateIfSameData() {
 		// try to update data that is already current, no update, return no unique ids
 		ResultObject result = processTsd.processRequest(request);
-		List<TimeSeries> expectedIds = Arrays.asList();
-		assertEquals(expectedIds, result.getTimeSeriesList());
+		assertEquals(Arrays.asList(), result.getTimeSeriesList());
 	}
 }

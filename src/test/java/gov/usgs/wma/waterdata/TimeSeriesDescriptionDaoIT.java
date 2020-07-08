@@ -44,20 +44,24 @@ import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 @DirtiesContext
 public class TimeSeriesDescriptionDaoIT {
 
+	protected static final Long JSON_DATA_ID_1 = 1L;
+	protected static final Long JSON_DATA_ID_265 = 265L;
+	protected static final Long JSON_DATA_ID_319 = 319L;
+	protected static final Long JSON_DATA_ID_500 = 500L;
+	protected static final Integer PARTITION_NUMBER = 7;
+
 	@Autowired
 	private TimeSeriesDescriptionDao tsdDao;
-	private RequestObject jsonDataId = new RequestObject();
+	private RequestObject request = new RequestObject();
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
+	@DatabaseSetup("classpath:/testResult/empty/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/singleUpsert/",
+			value="classpath:/testResult/singleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testInsert() {
-
 		// insert new data, return unique ids
-		jsonDataId.setId(265L);
-		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(JSON_DATA_ID_265, PARTITION_NUMBER);
 		assertThat(actualIds, containsInAnyOrder(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
 				new TimeSeries("07ac715d9db84117b2971df3d63b0837"),
@@ -67,15 +71,13 @@ public class TimeSeriesDescriptionDaoIT {
 	}
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
+	@DatabaseSetup("classpath:/testResult/empty/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/multipleUpsert/",
+			value="classpath:/testResult/multipleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testInsertMultiple() {
-
 		// insert new data, return unique ids
-		jsonDataId.setId(265L);
-		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(JSON_DATA_ID_265, PARTITION_NUMBER);
 		assertThat(actualIds, containsInAnyOrder(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
 				new TimeSeries("07ac715d9db84117b2971df3d63b0837"),
@@ -84,8 +86,7 @@ public class TimeSeriesDescriptionDaoIT {
 				));
 
 		// insert more new data, return corresponding unique ids
-		jsonDataId.setId(319L);
-		actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		actualIds = tsdDao.upsertTimeSeriesDescription(JSON_DATA_ID_319, PARTITION_NUMBER);
 		assertThat(actualIds, containsInAnyOrder(
 				new TimeSeries("016f54d5fd964c08963bc3531e185c9f"),
 				new TimeSeries("080e771673ff413fa0ed4496f2b3287c"),
@@ -94,28 +95,24 @@ public class TimeSeriesDescriptionDaoIT {
 	}
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
+	@DatabaseSetup("classpath:/testResult/empty/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/empty/",
+			value="classpath:/testResult/empty/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testNoInsertIfJsonDataIdNotFound() {
-
 		// try to upsert data using a json data id that was not found, no upsert, return no unique ids
-		jsonDataId.setId(500L);
-		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(JSON_DATA_ID_500, PARTITION_NUMBER);
 		assertTrue(actualIds.isEmpty());
 	}
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/existingOldData/")
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/staleData/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/singleUpsert/",
+			value="classpath:/testResult/singleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testUpdate() {
-
 		// update old data, return unique ids
-		jsonDataId.setId(265L);
-		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(JSON_DATA_ID_265, PARTITION_NUMBER);
 		assertThat(actualIds, containsInAnyOrder(
 				new TimeSeries("01c56d4c5d2143f4b039e78c5f43a2d3"),
 				new TimeSeries("07ac715d9db84117b2971df3d63b0837"),
@@ -125,28 +122,24 @@ public class TimeSeriesDescriptionDaoIT {
 	}
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/existingData/")
+	@DatabaseSetup("classpath:/testData/timeSeriesDescription/currentData/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/singleUpsert/",
+			value="classpath:/testResult/singleUpsert/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testNoUpdateIfSameData() {
-
 		// try to update data that is already current, no update, return no unique ids
-		jsonDataId.setId(265L);
-		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(JSON_DATA_ID_265, PARTITION_NUMBER);
 		assertTrue(actualIds.isEmpty());
 	}
 
 	@Test
-	@DatabaseSetup("classpath:/testData/timeSeriesDescription/empty/")
+	@DatabaseSetup("classpath:/testResult/empty/")
 	@ExpectedDatabase(
-			value="classpath:/testResult/timeSeriesDescription/handleMicroseconds/",
+			value="classpath:/testResult/handleMicroseconds/",
 			assertionMode=DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testMicrosecondHandling() {
-
 		// This is to ensure we handle fractional seconds on timestamps appropriately
-		jsonDataId.setId(1L);
-		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(jsonDataId.getId());
+		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(JSON_DATA_ID_1, PARTITION_NUMBER);
 		assertThat(actualIds, containsInAnyOrder(
 				new TimeSeries("testId1"),
 				new TimeSeries("testId2"),
