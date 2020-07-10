@@ -9,9 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -33,7 +32,7 @@ public class ProcessTimeSeriesDescriptionTest {
 
 	@Test
 	public void testNotFound() {
-		when(tsdDao.upsertTimeSeriesDescription(anyLong(), anyInt())).thenReturn(Arrays.asList());
+		when(tsdDao.upsertTimeSeriesDescription(any())).thenReturn(Arrays.asList());
 		ResultObject result = processTsd.apply(request);
 		assertNotNull(result);
 		assertEquals(Arrays.asList(), result.getTimeSeriesList());
@@ -44,7 +43,7 @@ public class ProcessTimeSeriesDescriptionTest {
 		List<TimeSeries> expectedTimeSeriesList = Arrays.asList(
 				new TimeSeries("uniqueId"),
 				new TimeSeries("anotherUniqueId"));
-		when(tsdDao.upsertTimeSeriesDescription(anyLong(), anyInt())).thenReturn(expectedTimeSeriesList);
+		when(tsdDao.upsertTimeSeriesDescription(any())).thenReturn(expectedTimeSeriesList);
 		ResultObject result = processTsd.apply(request);
 		assertNotNull(result);
 		assertEquals(expectedTimeSeriesList, result.getTimeSeriesList());

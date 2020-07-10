@@ -28,7 +28,6 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 
 import java.util.Arrays;
-import java.util.List;
 
 @SpringBootTest(webEnvironment=WebEnvironment.NONE,
 		classes={
