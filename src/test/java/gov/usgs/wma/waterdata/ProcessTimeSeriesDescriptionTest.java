@@ -9,8 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,16 +26,16 @@ public class ProcessTimeSeriesDescriptionTest {
 	public void beforeEach() {
 		processTsd = new ProcessTimeSeriesDescription(tsdDao);
 		request = new RequestObject();
-		request.setId(265L);
+		request.setId(TimeSeriesDescriptionDaoIT.JSON_DATA_ID_265);
+		request.setPartitionNumber(TimeSeriesDescriptionDaoIT.PARTITION_NUMBER);
 	}
 
 	@Test
 	public void testNotFound() {
-		when(tsdDao.upsertTimeSeriesDescription(anyLong())).thenReturn(Arrays.asList());
+		when(tsdDao.upsertTimeSeriesDescription(any())).thenReturn(Arrays.asList());
 		ResultObject result = processTsd.apply(request);
 		assertNotNull(result);
-		List<String> timeSeriesList = Arrays.asList();
-		assertEquals(timeSeriesList, result.getTimeSeriesList());
+		assertEquals(Arrays.asList(), result.getTimeSeriesList());
 	}
 
 	@Test
@@ -43,9 +43,9 @@ public class ProcessTimeSeriesDescriptionTest {
 		List<TimeSeries> expectedTimeSeriesList = Arrays.asList(
 				new TimeSeries("uniqueId"),
 				new TimeSeries("anotherUniqueId"));
-		when(tsdDao.upsertTimeSeriesDescription(anyLong())).thenReturn(expectedTimeSeriesList);
+		when(tsdDao.upsertTimeSeriesDescription(any())).thenReturn(expectedTimeSeriesList);
 		ResultObject result = processTsd.apply(request);
 		assertNotNull(result);
-		assertEquals(result.getTimeSeriesList(), expectedTimeSeriesList);
+		assertEquals(expectedTimeSeriesList, result.getTimeSeriesList());
 	}
 }

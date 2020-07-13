@@ -25,17 +25,18 @@ public class TimeSeriesDescriptionDao {
 	@Value("classpath:sql/upsertTimeSeriesDescriptions.sql")
 	protected Resource sqlQuery;
 
-	public List<TimeSeries> upsertTimeSeriesDescription(Long jsonDataId) {
+	public List<TimeSeries> upsertTimeSeriesDescription(RequestObject request) {
 		List<TimeSeries> timeSeriesList = Arrays.asList();
 		try {
 			String sql = new String(FileCopyUtils.copyToByteArray(sqlQuery.getInputStream()));
 			timeSeriesList = jdbcTemplate.query(
 					sql,
 					new TimeSeriesRowMapper(),
-					jsonDataId
+					request.getId(),
+					request.getPartitionNumber()
 					);
 		} catch (EmptyResultDataAccessException e) {
-			LOG.info("Couldn't find {} - {} ", jsonDataId, e.getLocalizedMessage());
+			LOG.info("Couldn't find {} - {} ", request.getId(), e.getLocalizedMessage());
 		} catch (IOException e) {
 			LOG.error("Unable to get SQL statement", e);
 			throw new RuntimeException(e);

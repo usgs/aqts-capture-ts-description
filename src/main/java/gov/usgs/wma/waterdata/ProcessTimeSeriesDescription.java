@@ -27,14 +27,12 @@ public class ProcessTimeSeriesDescription implements Function<RequestObject, Res
 
 	protected ResultObject processRequest(RequestObject request) {
 
-		Long jsonDataId = request.getId();
 		ResultObject result = new ResultObject();
 
-		if (null != jsonDataId) {
-			List<TimeSeries> timeSeriesList = tsdDao.upsertTimeSeriesDescription(jsonDataId);
-			result.setTimeSeriesList(timeSeriesList);
-			LOG.debug("Successfully processed json data id: {} and upserted unique ids: {}", jsonDataId, result.getTimeSeriesList());
-		}
+		List<TimeSeries> timeSeriesList = tsdDao.upsertTimeSeriesDescription(request);
+		result.setTimeSeriesList(timeSeriesList);
+		LOG.debug("Successfully processed json data id: {} and upserted unique ids: {}", request.getId(), result.getTimeSeriesList());
+
 		return result;
 	}
 }
