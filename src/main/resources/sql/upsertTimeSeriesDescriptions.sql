@@ -85,4 +85,5 @@ on conflict (time_series_unique_id) do update
         extended_attributes = excluded.extended_attributes,
         computation_identifier = excluded.computation_identifier
 where time_series_description.last_modified < excluded.last_modified
+        and time_series_description.time_series_unique_id = excluded.time_series_unique_id
 returning time_series_unique_id
