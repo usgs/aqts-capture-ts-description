@@ -2,6 +2,7 @@ package gov.usgs.wma.waterdata;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
@@ -27,7 +28,7 @@ import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 @SpringBootTest(webEnvironment=WebEnvironment.NONE,
 		classes={
@@ -110,7 +111,7 @@ public class ProcessTimeSeriesDescriptionIT {
 		// try to upsert data using a json data id that was not found, no upsert, return no unique ids
 		request.setId(TimeSeriesDescriptionDaoIT.JSON_DATA_ID_500);
 		ResultObject result = processTsd.processRequest(request);
-		assertEquals(Arrays.asList(), result.getTimeSeriesList());
+		assertEquals(Collections.emptyList(), result.getTimeSeriesList());
 	}
 
 	@Test
@@ -137,6 +138,33 @@ public class ProcessTimeSeriesDescriptionIT {
 	public void testNoUpdateIfSameData() {
 		// try to update data that is already current, no update, return no unique ids
 		ResultObject result = processTsd.processRequest(request);
-		assertEquals(Arrays.asList(), result.getTimeSeriesList());
+		assertEquals(Collections.emptyList(), result.getTimeSeriesList());
+	}
+
+	@Test
+	@DatabaseSetup("classpath:/testResult/empty/")
+	@ExpectedDatabase(
+			value = "classpath:/testResult/noDuplicateRowsForParmCode72019/",
+			assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+	public void testUpsertNotAffectingRowTwice() {
+		request.setId(TimeSeriesDescriptionDaoIT.JSON_DATA_ID_510);
+		ResultObject result = processTsd.processRequest(request);
+
+		assertThat(result.getTimeSeriesList(), containsInAnyOrder(
+				new TimeSeries("ff02b576d7d34f1c82a97e4405b16384"),
+				new TimeSeries("ed013f578a924df090ead63f05c5e5cc"),
+				new TimeSeries("739c687d86ee45308d09e9c8007f72b3"),
+				new TimeSeries("398ca443b25842a0a07d0e5741d25303"),
+				new TimeSeries("29be33c9a1ab4fa1aafb0ed97f2307ad"),
+				new TimeSeries("0f1ca4474f124e4ca3407e2aaa418c1c")
+				)
+		);
+
+		// This tests that the below error no longer occurs (was due to duplicate
+		// parm_cd in aq_comp_id_to_stat_cd table).
+		// ERROR: ON CONFLICT DO UPDATE command cannot affect row a second time
+		assertDoesNotThrow(() -> {
+			processTsd.processRequest(request);
+		}, "should have thrown an exception but did not");
 	}
 }

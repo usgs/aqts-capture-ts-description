@@ -3,6 +3,7 @@ package gov.usgs.wma.waterdata;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.List;
 
@@ -162,16 +163,26 @@ public class TimeSeriesDescriptionDaoIT {
 
 	@Test
 	@DatabaseSetup("classpath:/testResult/empty/")
-	@ExpectedDatabase(value = "classpath:/testResult/noSecondRows/", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
-	public void testUpsertNotAffectingSecondRow() {
+	@ExpectedDatabase(value = "classpath:/testResult/noDuplicateRowsForParmCode72019/", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+	public void testUpsertNotAffectingRowTwice() {
+		request.setId(JSON_DATA_ID_510);
+		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(request);
+
+		assertThat(actualIds, containsInAnyOrder(
+				new TimeSeries("ff02b576d7d34f1c82a97e4405b16384"),
+				new TimeSeries("ed013f578a924df090ead63f05c5e5cc"),
+				new TimeSeries("739c687d86ee45308d09e9c8007f72b3"),
+				new TimeSeries("398ca443b25842a0a07d0e5741d25303"),
+				new TimeSeries("29be33c9a1ab4fa1aafb0ed97f2307ad"),
+				new TimeSeries("0f1ca4474f124e4ca3407e2aaa418c1c")
+				)
+		);
+
 		// This tests that the below error no longer occurs (was due to duplicate
 		// parm_cd in aq_comp_id_to_stat_cd table).
 		// ERROR: ON CONFLICT DO UPDATE command cannot affect row a second time
-		request.setId(JSON_DATA_ID_510);
-		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(request);
-		System.out.println("actual ids len = " + actualIds.size());
-		System.out.println("actual ids = " + actualIds);
-//		assertThat(actualIds, containsInAnyOrder(new TimeSeries("testId1"), new TimeSeries("testId2"),
-//				new TimeSeries("testId3"), new TimeSeries("testId4")));
+		assertDoesNotThrow(() -> {
+			tsdDao.upsertTimeSeriesDescription(request);
+		}, "should have thrown an exception but did not");
 	}
 }
