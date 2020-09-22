@@ -165,6 +165,6 @@ public class ProcessTimeSeriesDescriptionIT {
 		// ERROR: ON CONFLICT DO UPDATE command cannot affect row a second time
 		assertDoesNotThrow(() -> {
 			processTsd.processRequest(request);
-		}, "should have thrown an exception but did not");
+		}, "should not have thrown an exception but did");
 	}
 }

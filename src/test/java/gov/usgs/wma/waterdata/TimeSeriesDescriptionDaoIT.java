@@ -183,6 +183,6 @@ public class TimeSeriesDescriptionDaoIT {
 		// ERROR: ON CONFLICT DO UPDATE command cannot affect row a second time
 		assertDoesNotThrow(() -> {
 			tsdDao.upsertTimeSeriesDescription(request);
-		}, "should have thrown an exception but did not");
+		}, "should not have thrown an exception but did");
 	}
 }
