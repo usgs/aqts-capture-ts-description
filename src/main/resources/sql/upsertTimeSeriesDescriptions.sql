@@ -67,6 +67,11 @@ as b
      on b.computation_identifier = aq_comp_id_to_stat_cd.computation_identifier
    left join aq_to_nwis_parm
      on b.parameter || '|' || b.unit = aq_to_nwis_parm.parameter
+/*
+    The "Local Assumed Datum" datum value associated with parameter code 72019 is only relevant to the discrete ground
+    water etl.  If we did not filter it here, we would get undesired duplicate values for this parameter code.
+ */
+where aq_to_nwis_parm.datum is null or aq_to_nwis_parm.datum != 'Local Assumed Datum'
 on conflict (time_series_unique_id) do update
     set
         unit = excluded.unit,

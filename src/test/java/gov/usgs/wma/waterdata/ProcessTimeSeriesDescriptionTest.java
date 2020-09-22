@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -32,10 +33,10 @@ public class ProcessTimeSeriesDescriptionTest {
 
 	@Test
 	public void testNotFound() {
-		when(tsdDao.upsertTimeSeriesDescription(any())).thenReturn(Arrays.asList());
+		when(tsdDao.upsertTimeSeriesDescription(any())).thenReturn(Collections.emptyList());
 		ResultObject result = processTsd.apply(request);
 		assertNotNull(result);
-		assertEquals(Arrays.asList(), result.getTimeSeriesList());
+		assertEquals(Collections.emptyList(), result.getTimeSeriesList());
 	}
 
 	@Test
