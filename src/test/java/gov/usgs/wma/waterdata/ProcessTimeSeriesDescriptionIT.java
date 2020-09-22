@@ -147,6 +147,9 @@ public class ProcessTimeSeriesDescriptionIT {
 			value = "classpath:/testResult/noDuplicateRowsForParmCode72019/",
 			assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testUpsertNotAffectingRowTwice() {
+		// This tests that the below error no longer occurs (was due to duplicate
+		// parm_cd in aq_comp_id_to_stat_cd table).
+		// ERROR: ON CONFLICT DO UPDATE command cannot affect row a second time
 		request.setId(TimeSeriesDescriptionDaoIT.JSON_DATA_ID_510);
 		ResultObject result = processTsd.processRequest(request);
 
@@ -159,12 +162,5 @@ public class ProcessTimeSeriesDescriptionIT {
 				new TimeSeries("0f1ca4474f124e4ca3407e2aaa418c1c")
 				)
 		);
-
-		// This tests that the below error no longer occurs (was due to duplicate
-		// parm_cd in aq_comp_id_to_stat_cd table).
-		// ERROR: ON CONFLICT DO UPDATE command cannot affect row a second time
-		assertDoesNotThrow(() -> {
-			processTsd.processRequest(request);
-		}, "should not have thrown an exception but did");
 	}
 }

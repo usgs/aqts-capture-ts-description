@@ -165,6 +165,9 @@ public class TimeSeriesDescriptionDaoIT {
 	@DatabaseSetup("classpath:/testResult/empty/")
 	@ExpectedDatabase(value = "classpath:/testResult/noDuplicateRowsForParmCode72019/", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
 	public void testUpsertNotAffectingRowTwice() {
+		// This tests that the below error no longer occurs (was due to duplicate
+		// parm_cd in aq_comp_id_to_stat_cd table).
+		// ERROR: ON CONFLICT DO UPDATE command cannot affect row a second time
 		request.setId(JSON_DATA_ID_510);
 		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(request);
 
@@ -177,12 +180,5 @@ public class TimeSeriesDescriptionDaoIT {
 				new TimeSeries("0f1ca4474f124e4ca3407e2aaa418c1c")
 				)
 		);
-
-		// This tests that the below error no longer occurs (was due to duplicate
-		// parm_cd in aq_comp_id_to_stat_cd table).
-		// ERROR: ON CONFLICT DO UPDATE command cannot affect row a second time
-		assertDoesNotThrow(() -> {
-			tsdDao.upsertTimeSeriesDescription(request);
-		}, "should not have thrown an exception but did");
 	}
 }
