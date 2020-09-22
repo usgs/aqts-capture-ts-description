@@ -49,6 +49,7 @@ public class TimeSeriesDescriptionDaoIT {
 	protected static final Long JSON_DATA_ID_265 = 265L;
 	protected static final Long JSON_DATA_ID_319 = 319L;
 	protected static final Long JSON_DATA_ID_500 = 500L;
+	protected static final Long JSON_DATA_ID_510 = 510L;
 	protected static final Integer PARTITION_NUMBER = 7;
 
 	@Autowired
@@ -157,5 +158,20 @@ public class TimeSeriesDescriptionDaoIT {
 				new TimeSeries("testId3"),
 				new TimeSeries("testId4")
 				));
+	}
+
+	@Test
+	@DatabaseSetup("classpath:/testResult/empty/")
+	@ExpectedDatabase(value = "classpath:/testResult/noSecondRows/", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+	public void testUpsertNotAffectingSecondRow() {
+		// This tests that the below error no longer occurs (was due to duplicate
+		// parm_cd in aq_comp_id_to_stat_cd table).
+		// ERROR: ON CONFLICT DO UPDATE command cannot affect row a second time
+		request.setId(JSON_DATA_ID_510);
+		List<TimeSeries> actualIds = tsdDao.upsertTimeSeriesDescription(request);
+		System.out.println("actual ids len = " + actualIds.size());
+		System.out.println("actual ids = " + actualIds);
+//		assertThat(actualIds, containsInAnyOrder(new TimeSeries("testId1"), new TimeSeries("testId2"),
+//				new TimeSeries("testId3"), new TimeSeries("testId4")));
 	}
 }
