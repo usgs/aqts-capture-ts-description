@@ -7,3 +7,5 @@ target/
 /.classpath
 /.project
 /.attach_pid*
+.serverless/
+node_modules/
