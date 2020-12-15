@@ -47,6 +47,7 @@ functions:
         - arn:aws:iam::${accountId}:role/csr-Lambda-Role
         - accountId:
             Ref: AWS::AccountId
+    reservedConcurrency: 30
     environment:
       FUNCTION_NAME: processTsDescription
       AWS_DEPLOYMENT_REGION: ${self:provider.region}
